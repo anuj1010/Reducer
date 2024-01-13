@@ -1,6 +1,4 @@
 import React, { useReducer, useState } from "react";
-import { ItemContext } from "../Store/ItemContext";
-import List from "./List";
 import { ToDoReducer } from "../Store/ReducerStore";
 
 const Home = () => {
@@ -17,30 +15,47 @@ const Home = () => {
       type: "Add",
       payload: {
         item: item,
-        id: Date(),
       },
     };
     dispatchToDoReducer(addItem);
     setItem("");
   };
 
+  const handleDelete = (val) => {
+    const deleteItem = {
+      type: "Delete",
+      payload: {
+        item: val,
+      },
+    };
+    dispatchToDoReducer(deleteItem);
+  };
+
   return (
-    <ItemContext.Provider
-      value={{ StoreItems: items, dispatchToDoReducer: dispatchToDoReducer }}
-    >
-      <div className="Container">
-        <div>To Do List</div>
-        <div className="InputContainer">
-          <input type="text" value={item} onChange={handleChange} />
-          <button style={{ marginLeft: "5px" }} onClick={handleAdd}>
-            Add
-          </button>
-        </div>
-        <div style={{ marginTop: "15px" }}>
-          <List></List>
-        </div>
+    <div className="Container">
+      <div>To Do List</div>
+      <div className="InputContainer">
+        <input type="text" value={item} onChange={handleChange} />
+        <button style={{ marginLeft: "5px" }} onClick={handleAdd}>
+          Add
+        </button>
       </div>
-    </ItemContext.Provider>
+      <div style={{ marginTop: "15px" }}>
+        {items.map((val, index) => {
+          return (
+            <div className="ItemContainer" key={index}>
+              <div key={index}> {val} </div>
+              <button
+                style={{ marginLeft: "10px" }}
+                onClick={() => handleDelete(val)}
+              >
+                Delete
+              </button>
+            </div>
+          );
+        })}
+      </div>
+    </div>
   );
 };
 
